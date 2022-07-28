@@ -11,7 +11,7 @@ public class UserLoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         /* 地址过滤 */
         String uri = request.getRequestURI() ;
-        if (uri.contains("/user/login") || uri.contains("/validate") || uri.contains("/user/register")){
+        if (uri.contains("/user/login") || uri.contains("/validate") || uri.contains("/user/register") || uri.contains("/wx")){
             return true ;
         }
         //http的header中获得token

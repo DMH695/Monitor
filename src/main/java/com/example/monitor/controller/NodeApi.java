@@ -29,6 +29,15 @@ public class NodeApi {
         return new ResultBody<>(true,200,nodeService.getPage(pageRequest,startDate,endDate,number));
     }
 
+    @RequestMapping(value = "/wx/all",method = RequestMethod.GET)
+    public Object findAllForWX(@RequestParam Integer pageNum, @RequestParam Integer pageSize,
+                          @RequestParam(required = false) Date startDate,@RequestParam(required = false) Date endDate,
+                          @RequestParam(required = false) String number){
+        PageRequest pageRequest = new PageRequest(pageNum,pageSize);
+        return new ResultBody<>(true,200,nodeService.getPage(pageRequest,startDate,endDate,number));
+    }
+
+
     /**
      * 新增节点
      * number、airWet、airTemperature、CO2、light、soilWet、soilTemperature
@@ -36,6 +45,15 @@ public class NodeApi {
      */
     @RequestMapping(value = "/insert",method = RequestMethod.POST)
     public Object insert(@RequestBody Node node){
+        //获取当前时间
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+        node.setDate(date);
+        nodeService.insert(node);
+        return new ResultBody<>(true,200,null);
+    }
+
+    @RequestMapping(value = "/wx/insert",method = RequestMethod.POST)
+    public Object insertForWX(@RequestBody Node node){
         //获取当前时间
         String date = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
         node.setDate(date);
@@ -57,6 +75,17 @@ public class NodeApi {
         nodeService.update(node);
         return new ResultBody<>(true,200,null);
     }
+    @RequestMapping(value = "/wx/update",method = RequestMethod.POST)
+    public Object updateForWX(@RequestBody Node node){
+        if (node.getId() <= 0) {
+            return new ResultBody<>(false,501,"error id");
+        }
+        //获取当前时间
+        String date = new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime());
+        node.setDate(date);
+        nodeService.update(node);
+        return new ResultBody<>(true,200,null);
+    }
     /**
      * 删除节点
      */
@@ -68,11 +97,29 @@ public class NodeApi {
         nodeService.delete(id);
         return new ResultBody<>(true,200,null);
     }
+
+    @RequestMapping(value = "/wx/delete",method = RequestMethod.GET)
+    public Object deleteForWX(@RequestParam int id){
+        if (id <= 0) {
+            return new ResultBody<>(false,501,"error id");
+        }
+        nodeService.delete(id);
+        return new ResultBody<>(true,200,null);
+    }
     /**
      * 控制开关
      */
     @RequestMapping(value = "/on-off",method = RequestMethod.GET)
     public Object updateControl(@RequestParam boolean control,@RequestParam int id){
+        if (id <= 0) {
+            return new ResultBody<>(false,501,"error id");
+        }
+        nodeService.change(id, control);
+        return new ResultBody<>(true,200,null);
+    }
+
+    @RequestMapping(value = "/wx/on-off",method = RequestMethod.GET)
+    public Object updateControlForWX(@RequestParam boolean control,@RequestParam int id){
         if (id <= 0) {
             return new ResultBody<>(false,501,"error id");
         }
