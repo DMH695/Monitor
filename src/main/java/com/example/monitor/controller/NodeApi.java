@@ -29,7 +29,7 @@ public class NodeApi {
         return new ResultBody<>(true,200,nodeService.getPage(pageRequest,startDate,endDate,number));
     }
 
-    @RequestMapping(value = "/wx/all",method = RequestMethod.GET)
+    @RequestMapping(value = " /wx/all",method = RequestMethod.GET)
     public Object findAllForWX(@RequestParam Integer pageNum, @RequestParam Integer pageSize,
                           @RequestParam(required = false) Date startDate,@RequestParam(required = false) Date endDate,
                           @RequestParam(required = false) String number){
